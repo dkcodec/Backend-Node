@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" />
+    <title>Spotify Song Finder</title>
+  </head>
+  <body>
+    <!-- Шапка -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1>Spotify Song Finder</h1>
+      </div>
+    </header>
+
+    <!-- Основной блок -->
+    <main class="app-main">
+      <!-- Секция поиска -->
+      <section class="search-section">
+        <form id="search-form" class="search-form">
+          <input
+            type="text"
+            name="query"
+            placeholder="Enter song or artist name"
+            required
+          />
+          <button type="submit" class="search-btn">Search</button>
+        </form>
+
+        <div class="sort-section">
+          <label for="sort-by" class="sort-label">Sort by:</label>
+          <select id="sort-by" class="sort-select">
+            <option value="popularity">Popularity</option>
+            <option value="releaseDate">Release Date</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- Секция результатов -->
+      <section id="results" class="results-section"></section>
+    </main>
+
+    <!-- Скрипт -->
+    <script>
+      const form = document.getElementById('search-form')
+      const resultsContainer = document.getElementById('results')
+      const sortSelect = document.getElementById('sort-by')
+      let tracks = []
+
+      // Функция для перевода миллисекунд в формат 'мм:сс'
+      function formatDuration(ms) {
+        const totalSeconds = Math.floor(ms / 1000)
+        const minutes = Math.floor(totalSeconds / 60)
+        const seconds = totalSeconds % 60
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const formData = new FormData(form)
+        const query = formData.get('query')
+
+        const response = await fetch('/search', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `query=${encodeURIComponent(query)}`,
+        })
+
+        tracks = await response.json()
+        displayTracks(tracks)
+      })
+
+      function displayTracks(tracks) {
+        resultsContainer.innerHTML = tracks
+          .map((track) => {
+            return `
+              <div class="track-card">
+                <img class="track-img" src="${track.image}" alt="${track.name}">
+                <div class="track-info">
+                  <h3 class="track-title">${track.name}</h3>
+                  <p class="track-detail"><strong>Artists:</strong> ${
+                    track.artists
+                  }</p>
+                  <p class="track-detail"><strong>Album:</strong> ${
+                    track.album
+                  }</p>
+                  <p class="track-detail"><strong>Release Date:</strong> ${
+                    track.releaseDate
+                  }</p>
+                  <p class="track-detail"><strong>Explicit:</strong> ${
+                    track.explicit ? 'Yes' : 'No'
+                  }</p>
+                  ${
+                    track.preview_url
+                      ? `<p class="track-detail"><strong>Preview:</strong> 
+                           <a href="${track.preview_url}" target="_blank">Play preview</a>
+                         </p>`
+                      : ''
+                  }
+
+                  <a class="track-link" href="${
+                    track.link
+                  }" target="_blank">Listen on Spotify</a>
+                </div>
+              </div>
+            `
+          })
+          .join('')
+      }
+
+      sortSelect.addEventListener('change', (e) => {
+        const sortBy = e.target.value
+        const sortedTracks = sortTracks(tracks, sortBy)
+        displayTracks(sortedTracks)
+      })
+
+      function sortTracks(tracks, criteria) {
+        if (criteria === 'popularity') {
+          return tracks.sort((a, b) => b.popularity - a.popularity)
+        } else if (criteria === 'releaseDate') {
+          return tracks.sort(
+            (a, b) => new Date(b.releaseDate) - new Date(a.releaseDate)
+          )
+        }
+        return tracks
+      }
+    </script>
+  </body>
+</html>

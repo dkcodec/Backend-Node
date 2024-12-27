@@ -1,0 +1,117 @@
+/* Общие стили */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  color: #333;
+}
+
+/* Шапка */
+.app-header {
+  background: #1db954;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.header-content h1 {
+  margin: 0;
+  color: #fff;
+}
+
+/* Основной контейнер */
+.app-main {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
+/* Поисковая секция */
+.search-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-form {
+  flex: 1;
+  display: flex;
+  gap: 10px;
+}
+
+.search-form input {
+  flex: 1;
+  padding: 8px;
+}
+
+.search-btn {
+  padding: 8px 16px;
+  background: #1db954;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background: #17a743;
+}
+
+/* Сортировка */
+.sort-section {
+  display: flex;
+  align-items: center;
+}
+
+.sort-label {
+  margin-right: 10px;
+}
+
+.sort-select {
+  padding: 6px;
+}
+
+/* Карточки треков */
+.results-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+}
+
+.track-card {
+  display: flex;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.track-img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+.track-info {
+  padding: 10px;
+  flex: 1;
+}
+
+.track-title {
+  margin: 0 0 8px 0;
+}
+
+.track-detail {
+  margin: 4px 0;
+}
+
+.track-link {
+  display: inline-block;
+  margin-top: 8px;
+  color: #1db954;
+  text-decoration: none;
+}
+
+.track-link:hover {
+  text-decoration: underline;
+}
