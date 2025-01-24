@@ -1,0 +1,39 @@
+<!-- views/edit.ejs -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1><%= title %></h1>
+  
+  <% if (!user._id) { %>
+    <!-- Создание пользователя -->
+    <form action="/" method="POST">
+  <% } else { %>
+    <!-- Редактирование пользователя -->
+    <form action="/<%= user._id %>?_method=PUT" method="POST">
+  <% } %>
+  
+    <div>
+      <label for="name">Имя:</label>
+      <input type="text" id="name" name="name" value="<%= user.name %>" required>
+    </div>
+    
+    <div>
+      <label for="age">Возраст:</label>
+      <input type="number" id="age" name="age" value="<%= user.age %>" required>
+    </div>
+    
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" value="<%= user.email %>" required>
+    </div>
+    
+    <button type="submit">Сохранить</button>
+    <a href="/">Отмена</a>
+  </form>
+</body>
+</html>
