@@ -1,0 +1,13 @@
+<%- include('../partials/header.ejs') %>
+<h2>Подтверждение 2FA</h2>
+<% if (error) { %>
+<p class="error"><%= error %></p>
+<% } %>
+<main>
+  <form method="POST" action="/2fa/verify">
+    <label>Введите одноразовый код (OTP):</label><br />
+    <input type="text" name="token" required /><br /><br />
+    <button type="submit">Проверить</button>
+  </form>
+</main>
+<%- include('../partials/footer.ejs') %>

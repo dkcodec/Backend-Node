@@ -1,0 +1,18 @@
+<%- include('../partials/header.ejs') %>
+<h2>Настройка 2FA</h2>
+
+<% if (error) { %>
+<p class="error"><%= error %></p>
+<% } %> <% if (qrCodeData) { %>
+<p>Сканируйте этот QR-код в Google Authenticator или Authy:</p>
+<img src="<%= qrCodeData %>" alt="QR Code" /><br /><br />
+<% } %>
+
+<main>
+  <form method="POST" action="/2fa/setup">
+    <label>Введите одноразовый код из приложения:</label><br />
+    <input type="text" name="token" required /><br /><br />
+    <button type="submit">Подтвердить</button>
+  </form>
+</main>
+<%- include('../partials/footer.ejs') %>

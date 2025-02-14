@@ -1,0 +1,15 @@
+<%- include('../partials/header.ejs') %>
+<h2>Регистрация</h2>
+<% if (typeof error !== 'undefined' && error) { %>
+<p class="error"><%= error %></p>
+<% } %>
+<main>
+  <form action="/auth/register" method="POST">
+    <label>Email:</label><br />
+    <input type="email" name="email" required /><br /><br />
+    <label>Пароль:</label><br />
+    <input type="password" name="password" required /><br /><br />
+    <button type="submit">Зарегистрироваться</button>
+  </form>
+</main>
+<%- include('../partials/footer.ejs') %>
