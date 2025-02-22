@@ -1,0 +1,45 @@
+<%- include('partials/header') %>
+
+<h2>Список задач</h2>
+<% if (error) { %>
+<div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<!-- Форма создания задачи (если хотите) -->
+<form action="/tasks" method="POST" class="mb-4">
+  <div class="mb-3">
+    <label for="title" class="form-label">Название</label>
+    <input type="text" class="form-control" id="title" name="title" required />
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Описание</label>
+    <textarea
+      class="form-control"
+      id="description"
+      name="description"
+    ></textarea>
+  </div>
+  <button type="submit" class="btn btn-success">Создать</button>
+</form>
+
+<!-- Список задач -->
+<ul class="list-group">
+  <% tasks.forEach(task => { %>
+  <li class="list-group-item mb-2">
+    <h5><%= task.title %></h5>
+    <p><%= task.description %></p>
+    <strong>Статус:</strong> <%= task.status %> <br />
+    <strong>Владелец:</strong> <%= task.user %>
+
+    <!-- Кнопка "Редактировать" -->
+    <a href="/tasks/edit/<%= task._id %>" class="btn btn-primary btn-sm mt-2"
+      >Редактировать</a
+    >
+    <a href="/tasks/delete/<%= task._id %>" class="btn btn-primary btn-sm mt-2"
+      >Удалить</a
+    >
+  </li>
+  <% }) %>
+</ul>
+
+<%- include('partials/footer') %>

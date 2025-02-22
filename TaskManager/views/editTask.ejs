@@ -1,0 +1,36 @@
+<%- include('partials/header') %>
+<h2>Редактирование задачи</h2>
+
+<form action="/tasks/edit/<%= task._id %>" method="POST">
+  <div class="mb-3">
+    <label for="title" class="form-label">Название</label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      name="title"
+      value="<%= task.title %>"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Описание</label>
+    <textarea
+      class="form-control"
+      id="description"
+      name="description"
+    ><%= task.description %></textarea>
+  </div>
+  <div class="mb-3">
+    <label for="status" class="form-label">Статус</label>
+    <select class="form-control" name="status" id="status">
+      <option value="pending" <%= task.status === 'pending' ? 'selected' : '' %>>В ожидании</option>
+      <option value="in_progress" <%= task.status === 'in_progress' ? 'selected' : '' %>>В процессе</option>
+      <option value="completed" <%= task.status === 'completed' ? 'selected' : '' %>>Завершено</option>
+    </select>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+
+<%- include('partials/footer') %>

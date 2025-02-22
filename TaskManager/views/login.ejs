@@ -1,0 +1,31 @@
+<%- include('partials/header') %>
+<div class="text-container" style="height: calc(100% - 152px)">
+  <h2>Вход</h2>
+  <% if (typeof error !== 'undefined' && error) { %>
+  <p class="error"><%= error %></p>
+  <% } %>
+  <form action="/login" method="POST">
+    <div class="mb-3">
+      <label for="email" class="form-label">Почта</label>
+      <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Пароль</label>
+      <input
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        required
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Войти</button>
+  </form>
+</div>
+<%- include('partials/footer') %>
