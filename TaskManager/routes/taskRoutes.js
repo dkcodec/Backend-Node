@@ -20,5 +20,4 @@ router.post(
   taskController.updateTask
 )
 router.post('/delete/:id', authMiddleware, taskController.deleteTask)
-
 module.exports = router
