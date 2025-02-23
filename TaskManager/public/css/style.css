@@ -1,0 +1,43 @@
+.heightCont {
+  min-height: calc(100vh - 152px);
+}
+
+.text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.error {
+  color: red;
+}
+
+.main-cont {
+  height: calc(100%);
+}
+.task-card {
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.8
+  ) !important; /* Белый фон с прозрачностью */
+  border-radius: 8px; /* Закругление углов */
+  padding: 15px; /* Внутренний отступ */
+  margin-bottom: 10px; /* Отступ снизу */
+  transition: 0.3s ease-in-out;
+  opacity: 0.8;
+}
+
+.task-card.bg-success {
+  background-color: rgba(40, 167, 69, 1) !important; /* Прозрачный зеленый */
+}
+
+.task-card.bg-warning {
+  background-color: rgba(255, 193, 7, 0.8) !important; /* Прозрачный желтый */
+}
+
+.task-card:hover {
+  opacity: 1;
+  border: 5px solid rgba(0, 0, 0, 0.5);
+}

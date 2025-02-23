@@ -1,13 +1,18 @@
 <%- include('partials/header') %>
-<div class="container" style="height: calc(100% - 152px)">
-  <h2>Регистрация</h2>
+<div class="text-container heightCont">
+  <h2>Registration</h2>
 
-  <% if (typeof error !== 'undefined' && error) { %>
-  <p class="error"><%= error %></p>
+  <% if (errors.length > 0) { %>
+  <div class="error">
+    <% errors.forEach(error => { %>
+    <p><%= error %></p>
+    <% }) %> %>
+  </div>
   <% } %>
+
   <form action="/register" method="POST">
     <div class="mb-3">
-      <label for="username" class="form-label">Имя пользователя</label>
+      <label for="username" class="form-label">User name</label>
       <input
         type="text"
         class="form-control"
@@ -17,7 +22,7 @@
       />
     </div>
     <div class="mb-3">
-      <label for="email" class="form-label">Почта</label>
+      <label for="email" class="form-label">Email</label>
       <input
         type="email"
         class="form-control"
@@ -27,7 +32,7 @@
       />
     </div>
     <div class="mb-3">
-      <label for="password" class="form-label">Пароль</label>
+      <label for="password" class="form-label">Password</label>
       <input
         type="password"
         class="form-control"
@@ -36,7 +41,7 @@
         required
       />
     </div>
-    <button type="submit" class="btn btn-success">Зарегистрироваться</button>
+    <button type="submit" class="btn btn-success">Register</button>
   </form>
 </div>
 <%- include('partials/footer') %>

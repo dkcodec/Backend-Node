@@ -7,7 +7,7 @@ module.exports = function (roles = []) {
 
     // check if user role is in roles array
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ error: 'Not allowed' })
+      return res.status(403).render('index', { errors: ['Not allowed'] })
     }
 
     next()

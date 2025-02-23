@@ -19,6 +19,9 @@ app.use(cookieParser())
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
+// set styles
+app.use(express.static('public'))
+
 // МИДЛВАР, который будет сохранять данные о пользователе в res.locals
 app.use((req, res, next) => {
   const token = req.cookies.token
@@ -64,6 +67,7 @@ app.get('/', async (req, res) => {
     const Task = require('./models/Task')
     let tasks = []
 
+    console.log(res.locals.user)
     try {
       if (res.locals.user.role === 'admin') {
         tasks = await Task.find({})
@@ -73,11 +77,10 @@ app.get('/', async (req, res) => {
     } catch (err) {
       return res
         .status(500)
-        .render('index', { error: 'Ошибка при получении задач' })
+        .render('tasks', { task: null, errors: ['Ошибка при получении задач'] })
     }
 
-    // Рендерим шаблон (например, можно использовать тот же, что и /tasks)
-    return res.render('tasks', { tasks, error: null })
+    return res.render('tasks', { tasks, task: null, errors: [] })
   } else {
     // Если не авторизован
     return res.render('index')

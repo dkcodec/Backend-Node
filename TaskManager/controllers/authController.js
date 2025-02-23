@@ -10,14 +10,14 @@ exports.register = async (req, res, next) => {
     if (!username || !email || !password) {
       return res
         .status(400)
-        .render('register', { error: 'All fields are required' })
+        .render('register', { error: ['All fields are required'] })
     }
 
     // check if user already exists
     const existingUser = await User.findOne({ $or: [{ email }, { username }] })
     if (existingUser) {
       return res.status(401).render('register', {
-        error: 'User with this email or username already exists',
+        error: ['User with this email or username already exists'],
       })
     }
 
@@ -33,7 +33,7 @@ exports.register = async (req, res, next) => {
 
     await user.save()
 
-    return res.redirect('/login')
+    return res.status(200).redirect('/login')
   } catch (error) {
     next(error)
   }
@@ -46,19 +46,21 @@ exports.login = async (req, res, next) => {
     if (!email || !password) {
       return res
         .status(400)
-        .render('login', { error: 'All fields are required' })
+        .render('login', { error: ['All fields are required'] })
     }
 
     // Find user by email
     const user = await User.findOne({ email })
     if (!user) {
-      return res.status(401).render('login', { error: 'Invalid email' })
+      return res.status(401).render('login', { error: ['Invalid email'] })
     }
 
     // Compare passwords
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
-      return res.status(401).render('login', { error: 'Invalid password' })
+      return res
+        .status(401)
+        .render('login', { task: null, errors: ['Invalid password'] })
     }
 
     // Create JWT token
@@ -72,7 +74,7 @@ exports.login = async (req, res, next) => {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     })
-    return res.redirect('/tasks')
+    return res.status(200).redirect('/tasks')
   } catch (error) {
     next(error)
   }

@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
   const token = req.cookies.token
   if (!token) {
     // Если нет токена, редирект на /login (или вернуть 401)
-    return res.redirect('/login')
+    return res.status(200).redirect('/login', { errors: ['Unauthorized'] })
   }
 
   try {
@@ -14,6 +14,6 @@ module.exports = (req, res, next) => {
     next()
   } catch (error) {
     // Некорректный токен
-    return res.redirect('/login')
+    return res.status(200).redirect('/login', { errors: ['Unauthorized'] })
   }
 }

@@ -1,45 +1,76 @@
 <%- include('partials/header') %>
+<div class="container heightCont">
+  <h2>Tasks</h2>
 
-<h2>Список задач</h2>
-<% if (error) { %>
-<div class="alert alert-danger"><%= error %></div>
-<% } %>
-
-<!-- Форма создания задачи (если хотите) -->
-<form action="/tasks" method="POST" class="mb-4">
-  <div class="mb-3">
-    <label for="title" class="form-label">Название</label>
-    <input type="text" class="form-control" id="title" name="title" required />
+  <% if (errors.length > 0) { %>
+  <div class="error">
+    <% errors.forEach(error => { %>
+    <p><%= error %></p>
+    <% }) %> %>
   </div>
-  <div class="mb-3">
-    <label for="description" class="form-label">Описание</label>
-    <textarea
-      class="form-control"
-      id="description"
-      name="description"
-    ></textarea>
-  </div>
-  <button type="submit" class="btn btn-success">Создать</button>
-</form>
+  <% } %>
 
-<!-- Список задач -->
-<ul class="list-group">
-  <% tasks.forEach(task => { %>
-  <li class="list-group-item mb-2">
-    <h5><%= task.title %></h5>
-    <p><%= task.description %></p>
-    <strong>Статус:</strong> <%= task.status %> <br />
-    <strong>Владелец:</strong> <%= task.user %>
+  <form action="/tasks" method="POST" class="mb-4">
+    <div class="mb-3">
+      <label for="title" class="form-label">Task name is...</label>
+      <input
+        type="text"
+        class="form-control"
+        id="title"
+        name="title"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">What should I do?</label>
+      <textarea
+        class="form-control"
+        id="description"
+        name="description"
+      ></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="status" class="form-label">Status</label>
+      <select class="form-control" name="status" id="status">
+        <option value="pending" <%= (task && task.status === 'pending') ? 'selected' : '' %>>Pending</option>
+        <option value="in_progress" <%= (task && task.status === 'in_progress') ? 'selected' : '' %>>In progress</option>
+        <option value="completed" <%= (task && task.status === 'completed') ? 'selected' : '' %>>Completed</option>
+      </select>
+    </div>
+    
+    <button type="submit" class="btn btn-success">Create</button>
+  </form>
 
-    <!-- Кнопка "Редактировать" -->
-    <a href="/tasks/edit/<%= task._id %>" class="btn btn-primary btn-sm mt-2"
-      >Редактировать</a
+  <ul class="list-group">
+    <% tasks.forEach(task => { %>
+    <li
+      class="list-group-item mb-2 task-card <% if (task.status === 'completed') { %> bg-success text-white <% } if(task.status === 'in_progress') { %> bg-warning text-dark <%} %>"
     >
-    <a href="/tasks/delete/<%= task._id %>" class="btn btn-primary btn-sm mt-2"
-      >Удалить</a
-    >
-  </li>
-  <% }) %>
-</ul>
+      <h5><%= task.title %></h5>
+      <p><%= task.description %></p>
+      <strong>Status:</strong> <%= task.status %> <br />
+      <strong>Creator:</strong> <%= task.username %>
+
+      <!-- Кнопка "Редактировать" -->
+      <a href="/tasks/edit/<%= task._id %>" class="btn btn-primary btn-sm mt-2"
+        >Редактировать</a
+      >
+      <form
+        action="/tasks/delete/<%= task._id %>"
+        method="POST"
+        style="display: inline"
+      >
+        <button
+          type="submit"
+          class="btn btn-danger btn-sm"
+          onclick="return confirm('Вы уверены?');"
+        >
+          Удалить
+        </button>
+      </form>
+    </li>
+    <% }) %>
+  </ul>
+</div>
 
 <%- include('partials/footer') %>
