@@ -65,7 +65,6 @@ const validate = (schema, view) => (req, res, next) => {
     }
     getTasks()
 
-    // Если у нас есть EJS-шаблон (например, "register.ejs"), то рендерим страницу с ошибками
     if (view) {
       if (view === 'tasks') {
         return res
@@ -75,7 +74,6 @@ const validate = (schema, view) => (req, res, next) => {
       return res.status(400).render(view, { errors, user: req.body })
     }
 
-    // Если нет шаблона, просто возвращаем JSON (например, API-запросы)
     return res.status(400).json({ errors })
   }
 

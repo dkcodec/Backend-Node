@@ -1,4 +1,3 @@
-// app.js
 const express = require('express')
 const path = require('path')
 const dotenv = require('dotenv')
@@ -15,59 +14,57 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
-// Указываем EJS в качестве шаблонизатора
+// ejs as view engine
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
 // set styles
 app.use(express.static('public'))
 
-// МИДЛВАР, который будет сохранять данные о пользователе в res.locals
+// Middleware for saving user data in res.locals
 app.use((req, res, next) => {
   const token = req.cookies.token
   if (token) {
     try {
-      // Пытаемся декодировать JWT
+      // decode JWT and save user data in res.locals
       const decoded = jwt.verify(token, process.env.JWT_SECRET)
-      // В res.locals.user можно сохранить всё, что нужно в шаблонах
+
+      // In res.locals.user you can save everything you need in templates
       res.locals.user = decoded
     } catch (err) {
-      // Некорректный или просроченный токен
+      // Invalid token
       res.locals.user = null
     }
   } else {
-    // Нет токена
+    // No token
     res.locals.user = null
   }
   next()
 })
 
-// Роут для логаута
+// LogOut route
 app.get('/logout', (req, res) => {
-  // Удаляем куки и перебрасываем на главную
+  // Clear cookie and redirect to home page
   res.clearCookie('token')
   return res.redirect('/')
 })
 
-// Импортируем роуты
+//Import routes
 const authRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
 const taskRoutes = require('./routes/taskRoutes')
 
-// Пример страниц (главная, логин, регистрация) — это просто GET-запросы для рендеринга
-// app.js
+// Home routes
 app.get('/', async (req, res) => {
   if (res.locals.user) {
-    // Если пользователь авторизован, показываем ему задачи
-    // Либо можем сделать redirect('/tasks'), но тут покажу как прямо на / отображать задачи
+    // If user is authorized, show him tasks
 
-    // Для этого нужно получить список задач из базы
-    // Если user.role === 'admin' -> берем все задачи
-    // иначе -> берем задачи только текущего пользователя
+    // Get tasks from the database
+    // If user.role === 'admin' -> get all tasks
+    // else -> get only tasks of the current user
     const Task = require('./models/Task')
     let tasks = []
 
-    console.log(res.locals.user)
     try {
       if (res.locals.user.role === 'admin') {
         tasks = await Task.find({})
@@ -82,17 +79,16 @@ app.get('/', async (req, res) => {
 
     return res.render('tasks', { tasks, task: null, errors: [] })
   } else {
-    // Если не авторизован
     return res.render('index')
   }
 })
 
-// Подключаем API-роуты / контроллеры
+// getting api-routes / controllers
 app.use('/', authRoutes) // /register, /login
 app.use('/users', userRoutes) // /users/profile и т.п.
-app.use('/tasks', taskRoutes) // /tasks CRUD (доступ только авторизованным)
+app.use('/tasks', taskRoutes) // /tasks CRUD
 
-// Глобальная обработка ошибок
+// Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack)
   return res.status(500).json({ error: 'Server Error' })

@@ -46,9 +46,8 @@ exports.updateProfile = async (req, res, next) => {
 
 exports.adminPanel = async (req, res, next) => {
   try {
-    const users = await User.find().select('-password').lean() // Загружаем всех пользователей
-    const tasks = await Task.find().lean() // Загружаем все задачи
-
+    const users = await User.find().select('-password').lean() // Get all users
+    const tasks = await Task.find().lean() // Get all tasks
     const userTasks = {}
     users.forEach((user) => {
       userTasks[user._id] = tasks.filter(
@@ -67,10 +66,10 @@ exports.deleteUser = async (req, res, next) => {
   try {
     const userId = req.params.id
 
-    // Удаляем пользователя
+    // Delete user
     await User.findByIdAndDelete(userId)
 
-    // Удаляем все его задачи
+    // Delete all tasks of this user
     await Task.deleteMany({ user: userId })
 
     return res.status(200).redirect('/users/admin')
@@ -90,7 +89,7 @@ exports.updateByAdmin = async (req, res, next) => {
       return res.status(404).redirect('/users/admin')
     }
 
-    // Обновляем данные пользователя
+    // Update user
     if (username) user.username = username
     if (email) user.email = email
     if (role) user.role = role

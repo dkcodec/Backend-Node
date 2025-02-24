@@ -1,5 +1,3 @@
-<!-- views/partials/header.ejs -->
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -17,9 +15,7 @@
         <a class="navbar-brand" href="/">Task Manager</a>
         <div class="collapse navbar-collapse justify-content-end">
           <ul class="navbar-nav">
-            <% if (user) { %>
-            <!-- Если user есть, значит авторизован -->
-            <% if (user.role === 'admin') { %>
+            <% if (user) { %> <% if (user.role === 'admin') { %>
             <li class="nav-item">
               <a class="nav-link" href="/users/admin">Admin Panel</a>
             </li>

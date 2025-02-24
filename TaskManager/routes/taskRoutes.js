@@ -4,7 +4,6 @@ const taskController = require('../controllers/taskController')
 const authMiddleware = require('../middlewares/authMiddleware')
 const { validate, taskSchema } = require('../middlewares/validation')
 
-// GET /tasks -> показывает список задач (и форму создания)
 router.get('/', authMiddleware, taskController.showTasksPage)
 router.post(
   '/',
@@ -12,7 +11,7 @@ router.post(
   validate(taskSchema, 'tasks'),
   taskController.createTask
 )
-router.get('/edit/:id', authMiddleware, taskController.editTaskForm) // показать форму редактирования
+router.get('/edit/:id', authMiddleware, taskController.editTaskForm)
 router.post(
   '/edit/:id',
   authMiddleware,

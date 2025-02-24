@@ -3,14 +3,10 @@ const User = require('../models/User')
 
 exports.showTasksPage = async (req, res, next) => {
   try {
-    // Из токена мы знаем userId (декодировать заново или передавать в req.user).
-    // Допустим, в authMiddleware, вы можете сохранить req.user = jwt.verify(...)
-    // Тогда здесь просто:
-    const userId = getUserIdFromToken(req) // сделайте свою логику
+    const userId = getUserIdFromToken(req)
 
     const tasks = await Task.find({ user: userId }).lean()
 
-    // Рендерим EJS-страницу tasks.ejs и передаём массив tasks
     return res
       .status(200)
       .render('tasks', { tasks: tasks || [], task: null, errors: [] })
@@ -21,12 +17,12 @@ exports.showTasksPage = async (req, res, next) => {
 
 exports.createTask = async (req, res, next) => {
   try {
-    const { userId, role } = req.user
+    const userId = req.user
     const { title, description, status } = req.body
 
     const user = await User.findById(userId).lean()
 
-    // Создаём задачу, привязанную к текущему пользователю
+    // create new task
     const newTask = new Task({
       title,
       description,
@@ -53,7 +49,7 @@ exports.editTaskForm = async (req, res, next) => {
       return res.status(404).redirect('/tasks')
     }
 
-    // Проверка прав: если не admin и не владелец, нет доступа
+    // check if user has rights to edit this task
     if (role !== 'admin' && String(task.user) !== String(userId)) {
       return res.status(401).redirect('/tasks')
     }
@@ -67,9 +63,6 @@ exports.editTaskForm = async (req, res, next) => {
   }
 }
 
-/**
- * Обновление задачи (метод POST)
- */
 exports.updateTask = async (req, res, next) => {
   try {
     const { userId, role } = req.user
@@ -81,12 +74,11 @@ exports.updateTask = async (req, res, next) => {
       return res.status(404).redirect('/tasks')
     }
 
-    // Проверяем права
     if (role !== 'admin' && String(task.user) !== String(userId)) {
       return res.status(401).redirect('/tasks')
     }
 
-    // Обновляем поля
+    // update task fields
     if (title) task.title = title
     if (description) task.description = description
     if (status) task.status = status
@@ -106,12 +98,12 @@ exports.deleteTask = async (req, res, next) => {
 
     const task = await Task.findById(taskId)
     if (!task) {
-      return res.status(404).redirect('/tasks') // если задачи нет, просто редиректим назад
+      return res.status(404).redirect('/tasks') // if task not found redirect to tasks page
     }
 
-    // Проверяем, имеет ли право пользователь удалять эту задачу
+    // check if user has rights to delete this task
     if (role !== 'admin' && String(task.user) !== String(userId)) {
-      return res.status(401).redirect('/tasks') // обычный юзер может удалять только свои задачи
+      return res.status(401).redirect('/tasks') // if user has no rights redirect to tasks page
     }
 
     await Task.findByIdAndDelete(taskId)
@@ -123,7 +115,6 @@ exports.deleteTask = async (req, res, next) => {
   }
 }
 
-// Можете вынести эту логику в отдельную функцию или использовать req.user в authMiddleware
 function getUserIdFromToken(req) {
   const token = req.cookies.token
   const decoded = token
