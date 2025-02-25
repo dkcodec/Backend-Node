@@ -17,7 +17,7 @@ exports.showTasksPage = async (req, res, next) => {
 
 exports.createTask = async (req, res, next) => {
   try {
-    const userId = req.user
+    const userId = req.user.userId
     const { title, description, status } = req.body
 
     const user = await User.findById(userId).lean()
